@@ -1,4 +1,4 @@
-![Logo](https://raw.githubusercontent.com/chrivers/bifrost/master/doc/logo-title-640x160.png)
+![Logo](https://raw.githubusercontent.com/duvholt/bifrost/master/doc/logo-title-640x160.png)
 
 # Bifrost Bridge [DEV VERSION]
 
@@ -9,7 +9,7 @@ This is the DEVELOPMENT TESTING VERSION.
 
 Please see the regular installation instructions here:
 
-https://github.com/chrivers/bifrost-hassio/tree/master/bifrost
+https://github.com/duvholt/bifrost-hassio/tree/master/bifrost
 
 ## Installation guide
 
@@ -65,11 +65,11 @@ Please adjust this as needed.
 > [!IMPORTANT]
 > **Make sure** the "mac:" field matches the mac address on the network interface you want to serve requests from.
 
-For details, see the [configuration reference](https://github.com/chrivers/bifrost/blob/master/doc/config-reference.md).
+For details, see the [configuration reference](https://github.com/duvholt/bifrost/blob/master/doc/config-reference.md).
 
 This mac address if used to generate a self-signed certificate, so the Hue App
 will recognize this as a "real" Hue Bridge. If the mac address is incorrect,
-this will not work. [How to find your mac address](https://github.com/chrivers/bifrost/blob/master/doc/how-to-find-mac-linux.md).
+this will not work. [How to find your mac address](https://github.com/duvholt/bifrost/blob/master/doc/how-to-find-mac-linux.md).
 
 # Supported features
 

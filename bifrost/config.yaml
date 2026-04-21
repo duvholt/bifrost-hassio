@@ -3,7 +3,7 @@ name: Bifrost
 version: master-2025-05-09
 slug: bifrost
 description: "Bifrost enables you to emulate a Philips Hue Bridge to control lights, groups and scenes from Zigbee2Mqtt."
-url: "https://github.com/chrivers/bifrost"
+url: "https://github.com/duvholt/bifrost"
 arch:
   - amd64
   - aarch64

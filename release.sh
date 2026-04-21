@@ -15,7 +15,7 @@ set_version() {
     VER=$2
 
     sed -i -re "s|^(version):.+|\1: ${VER}|" ${DIR}/config.yaml
-    sed -i -re "s|^  (.+): \"(ghcr.io/chrivers/bifrost):.+\"|  \1: \"\2:${VER}\"|" ${DIR}/build.yaml
+    sed -i -re "s|^  (.+): \"(ghcr.io/duvholt/bifrost):.+\"|  \1: \"\2:${VER}\"|" ${DIR}/build.yaml
 }
 
 ./generate.py "$TARGET_DIR" templates/readme-stable.jinja "${FIRST_COMMIT}..master" > bifrost/README.md
