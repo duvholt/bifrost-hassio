@@ -12,30 +12,55 @@ in development at the time.
 
 # Changes
 
-### 2025-05-19: `chrivers/web-user-interface`
-
-This is a preview of the upcoming Bifrost web interface!
-
-Eventually, this will be more fleshed out, but already it allows controlling
-lights and rooms, and experimental (and work-in-progress) support for
-dynamically connecting to new Z2m servers.
-
-> [!IMPORTANT]
-> To use this early preview of the web interface with the Bifrost Home Assistant
-> add-on, please add the following setting to your `config.yaml`:
-
-```yaml
-bifrost:
-  frontend_dir: /app/frontend
-```
-
-After this change (and a restart of Bifrost), you should be able to visit the
-web interface in your browser. It is available on the ip specified under
-`bridge` in `config.yaml`.
+### 2025-05-24: `chrivers/web-user-interface`
 
 ****************************************
 
-### 2025-05-19: `chrivers/z2m-new-features`
+### 2025-05-24: `chrivers/sigterm-handling`
+
+Since Bifrost is running as pid 1 in docker, we need to catch SIGTERM to perform clean shutdowns without waiting for docker timeout to stop the container.
+
+For example, this makes the "stop" button in Home Assistant react quickly, and perform a clean shutdown.
+
+****************************************
+
+### 2025-05-24: `chrivers/unit-test-improvements`
+
+Add unit test coverage for almost all lines of code in the `hue` crate, that is not a data model or constructor.
+
+This work is a bit tedious, but very exciting for the maintainability of Bifrost.
+
+The `hue` crate contains a significant amount of code related to handling events, colors, colorspaces, gamma correction, etc.
+
+All of this code is now tested against our assumptions of what it *should* do.
+This obviously doesn't test if our assumptions are correct, but at least now
+the code can't easily deviate from them.
+
+Adding these unit tests uncovered a number of minor errors that have been fixed:
+- Fix `HueEntSegmentLayout::pack()`, which produced wrong output (currently not used in Bifrost)
+- Make `HueStreamPacket::parse()` not panic on invalid input
+- Make `Clamp::unit_to_u8_clamped()` perform proper rounding.
+- Make `XY::from_rgb_unit()` fall back to `D50_WHITE_POINT`, not `D65_WHITE_POINT`.
+
+Overall, these are minor papercuts that have not noticeably affected the functionality of Bifrost. Nevertheless, it is nice to have good test coverage.
+
+****************************************
+
+### 2025-05-24: `chrivers/service-instancing`
+
+Rework `svc` ("service") crate, to support templated services.
+
+These are analogous to systemd template service, in which a service name can contain `@` to indicate it is a template.
+
+In this way, instead of manually registering `foo-1`, `foo-2`, etc,
+we can register `foo@`, and then start instances `1`, `2`, etc.
+
+This makes service management cleaner and simpler, and provides a way to recognize groups
+of related services.
+
+****************************************
+
+### 2025-05-24: `chrivers/z2m-new-features`
 
 After the many fundamental and infrastructure changes in Bifrost, it's finally
 time for a set of changes that add new features!
@@ -748,7 +773,7 @@ Add basic Docker compatibility (contributed by @ellwoodb)
 ## Stable version:
 
 Please see the
-[CHANGELOG.md](https://github.com/chrivers/bifrost-hassio/blob/master/bifrost/CHANGELOG.md)
+[CHANGELOG.md](https://github.com/duvholt/bifrost-hassio/blob/master/bifrost/CHANGELOG.md)
 for the stable version, which has an extensive list of changes from the previous
 version.
 

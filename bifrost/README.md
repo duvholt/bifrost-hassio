@@ -145,6 +145,111 @@ covered the cost of a Hue Sync Box!
 
 # Changelog (11 most recent changes)
 
+### 2026-05-03: `duvholt/fix/z2m-device-effect`
+
+Fixes parsing of new device effects introduced in zigbee2mqtt 2.10.0. This caused parsing errors for most Philips Hue light updates.
+
+****************************************
+
+### 2026-05-02: `Intecpsp/fix/websocket-stability`
+
+Clean up disconnected websocket connections in Bifrosts websocket API
+
+****************************************
+
+### 2026-05-02: `Intecpsp/fix/ent-stream-reconnect`
+
+Clean up stale entertainment stream on Z2M reconnect
+
+****************************************
+
+### 2025-06-02: `duvholt/timed-effects`
+
+Implement timed effects for Hue lights. This enables the effects "sunrise" and "sunset" using the https api.
+
+****************************************
+
+### 2025-05-27: `duvholt/light-transition`
+
+Implement support for transition (color, brightness)
+
+****************************************
+
+### 2025-05-25: `duvholt/wake-up-sunrise-hue-crate`
+
+Hue crate changes needed for implementing wake-up automation
+
+****************************************
+
+### 2025-05-24: `chrivers/sigterm-handling`
+
+Since Bifrost is running as pid 1 in docker, we need to catch SIGTERM to perform clean shutdowns without waiting for docker timeout to stop the container.
+
+For example, this makes the "stop" button in Home Assistant react quickly, and perform a clean shutdown.
+
+****************************************
+
+### 2025-05-24: `chrivers/unit-test-improvements`
+
+Add unit test coverage for almost all lines of code in the `hue` crate, that is not a data model or constructor.
+
+This work is a bit tedious, but very exciting for the maintainability of Bifrost.
+
+The `hue` crate contains a significant amount of code related to handling events, colors, colorspaces, gamma correction, etc.
+
+All of this code is now tested against our assumptions of what it *should* do.
+This obviously doesn't test if our assumptions are correct, but at least now
+the code can't easily deviate from them.
+
+Adding these unit tests uncovered a number of minor errors that have been fixed:
+- Fix `HueEntSegmentLayout::pack()`, which produced wrong output (currently not used in Bifrost)
+- Make `HueStreamPacket::parse()` not panic on invalid input
+- Make `Clamp::unit_to_u8_clamped()` perform proper rounding.
+- Make `XY::from_rgb_unit()` fall back to `D50_WHITE_POINT`, not `D65_WHITE_POINT`.
+
+Overall, these are minor papercuts that have not noticeably affected the functionality of Bifrost. Nevertheless, it is nice to have good test coverage.
+
+****************************************
+
+### 2025-05-24: `chrivers/service-instancing`
+
+Rework `svc` ("service") crate, to support templated services.
+
+These are analogous to systemd template service, in which a service name can contain `@` to indicate it is a template.
+
+In this way, instead of manually registering `foo-1`, `foo-2`, etc,
+we can register `foo@`, and then start instances `1`, `2`, etc.
+
+This makes service management cleaner and simpler, and provides a way to recognize groups
+of related services.
+
+****************************************
+
+### 2025-05-24: `chrivers/z2m-new-features`
+
+After the many fundamental and infrastructure changes in Bifrost, it's finally
+time for a set of changes that add new features!
+
+This one is particularly exciting, as it contains a number of exciting additions
+that directly improve the end-user experience.
+
+Bifrost is now able to:
+
+ - Update existing scenes (closes #85)
+ - Delete lights
+ - Add new lights to the bridge
+ - Add new lights to rooms
+ - Remove lights from rooms
+ - Make lights pulse when selected
+ - Learn scenes with gradient colors
+
+All these actions now work from the api, including directly from the Hue app!
+
+No more jumping back and forth between the app and z2m to perform common
+maintenance tasks!
+
+****************************************
+
 ### 2025-05-09: `chrivers/apiv1-entertainment-mode`
 
 Implement complete support for entertainment zones ("sync mode") for the v1 api, including the obsolete (but apparently still used) streaming v1 api!
@@ -154,175 +259,6 @@ This fixes support for at least the following:
  - The iLightShow app for streaming blinkenlights
 
 This change also improves logging and error handling related to sync streaming.
-
-****************************************
-
-### 2025-05-04: `chrivers/sync-stream-fixes`
-
-Major rework of entertainment streaming ("sync mode") for Bifrost!
-
-- Now supports both XY and RGB mode
-- Fix stream closing on DTLS timeout/disconnect (no longer left lingering in "active" state).
-- Improves compatibility with Hue Sync Box
-- Add support for configurable streaming fps limit for each z2m backend
-- Increase timeout to match Hue Bridge
-- Adjust the smoothing factor (fade speed) to match the frame rate!
-- ..this smoothing factor adjustment is not even supported by a Hue Bridge! Only Bifrost :-)
-
-****************************************
-
-### 2025-05-04: `chrivers/ssdp-upnp-fix-uuid`
-
-This change fixes ssdp/upnp discovery of Bifrost bridges.
-
-Incorporating fixes from our forked version of tokio-ssdp makes Bifrost respond properly to M-SEARCH requests.
-
-This makes several types of devices that were previously unable to find Bifrost, able to do so. One example is Philips Ambilight TVs.
-
-Note: Because of a buggy implementation of the Hue protocol in those Ambilight TVs, they are still unable to use Bifrost as a streaming target. But at least they are now able to find Bifrost.
-
-****************************************
-
-### 2025-05-02: `chrivers/bifrost-api-crate`
-
-This is a major internal refactoring, moving common code needed for
-communication with Bifrost into a separate library ("crate").
-
-Existing crates are reworked to have "features" (compile flags), that allow
-partial functionality to be selected at compile time.
-
-In the future, this will allow code to be shared between the backend, and an
-upcoming web frontend.
-
-This change also adds support for adding/removing lights from a room, directly from the hue app!
-
-****************************************
-
-### 2025-05-02: `chrivers/z2m-refactoring`
-
-This change cleans up a bunch of internal code related to the z2m backend, and
-makes two important user-facing improvement:
-
-#### Status updates
-Previously, as part of supporting hue effects (candle, fireplace, etc), we would
-encode all light update requests to hue lights as the hue-specific
-`HueZigbeeUpdate` data format.
-
-This is the data format a Hue Bridge (mostly) uses to control lights, and is a
-quick and effective way to update all light settings at once, even the
-vendor-specific extensions.
-
-However, Zigbee2MQTT does not know how to report state updates when this update
-method is used. It just sees a "raw" message, and passes it along.
-
-So until we land better support in Zigbee2MQTT for dealing with these kinds of
-state updates, split light updates into two parts: one for regular light
-properties (on/off, brightness, etc), and one optional part for hue-specific
-effects.
-
-The hue-specific update is then only sent if needed and supported.
-
-This makes z2m able to report changes to common properties again, but has the
-slight downside of sending two messages, if hue-specific extensions are used.
-
-Hopefully over time this can be simplified, but for now this is an improvement
-over the previous situation.
-
-#### Z-Stack entertainment mode fix
-
-Previously, "z-stack" based adaptors did not work with entertainment mode,
-because of the way the highly specialized Zigbee frames are constructed.
-
-This update changes how entertainment mode frames are constructed, allowing
-adapters in the Z-Stack family to join the fun.
-
-****************************************
-
-### 2025-04-29: `chrivers/better-eventstream`
-
-When hue objects are updated, the even stream offers live updates of changed properties, to allow clients (e.g. the Hue App) to track the changes over time.
-
-So far, our mode of these eventstream blocks have been the same as for PUT updates.
-
-It turns out this is *almost* correct, but subtle wrong.
-
-Instead, the event streams are based on diffing json values, and including new and changed sub-values.
-
-Also, certain properties should *always* be included, if present. Most notably, the `.owner` field (see #76, which might be fixed by this.)
-
-Other clients might also be affected (improved) by this (see #122)
-
-****************************************
-
-### 2025-04-29: `chrivers/timezone-support`
-
-Implement proper timezone support.
-
-With these changes, the `bifrost.timezone` field in `config.yaml` is actually used to calculate the `.localtime` time field of the API config.
-
-Multiple people have reported that this support (combined with *actually* setting the correct timezone), resolves their problems with connecting to Bifrost (see for example https://github.com/chrivers/bifrost/issues/88)
-
-****************************************
-
-### 2025-04-29: `chrivers/mdns-upnp-fixes`
-
-- Entirely rework support for mDNS and SSDP/UPnP
- - Fixed a bug where mDNS reported an invalid hostname for Bifrost
- - Reworked my fork of tokio-ssdp crate, to make it respond properly
- - Add support for "upgrading" firmware through Hue App!
-
-You read the last one right - if there's a new mandatory version upgrade before the automatic version check picks it up (it checks once per day), the Hue app will offer to upgrade the bridge firmware.
-
-Simply say yes to this exciting prospect! Code has been added to Bifrost that recognizes this update pattern, and re-checks the version number.
-
-The end result is that the Hue app *thinks* it has updated the bridge, which is all we need.
-
-****************************************
-
-### 2025-04-29: `chrivers/predictable-deterministic`
-
-Manually impl Hash for RType, to maintain predictable output
-
-if at all possible, RType::deterministic() should produce the same uuid in later versions of Bifrost as the current one.
-
-If not, everybody will see bad artefacts such as the infamous duplicate group issue, that has happened a few times by accident - and now we found out why.
-
-When reordering (or indeed just adding/removing) a variant of RType (Room, Scene, etc), all following variants would get a new index, and this meant a new hash.
-
-Now Hash is implemented manually, and a regression test has been added to prevent future accidents.
-
-****************************************
-
-### 2025-04-25: `chrivers/hue-route-refactoring`
-
-Refactor all route handling for Hue api v2 ("clip").
-
-Previously, each sub-scope (`/light`, `/scene`, etc) implementer their own routing for that particular set of routes.
-
-This works, but is highly repetitive, and was difficult to manage.
-
-Now, there is only a single router component for the clip api, which dispatches to the relevant handlers for the parts that are implemented in Bifrost.
-
-The biggest change (apart from being much easier to maintain) is that *all* routes are now very cleanly marked as one of
-
-  1) Supported
-  2) "Missing" (allowed by protocol, but not supported by Bifrost)
-  3) "Denied" (not allowed by protocol, and correctly rejected by Bifrost)
-
-Not only does this prevent duplicated bits of code and boilerplate, it also reduces risk of accidental divergence between various parts of the route handling.
-
-****************************************
-
-### 2025-04-22: `chrivers/legacy-api-fixes`
-
-This update fixes bugs and adds workarounds for the legacy api.
-
-In particular, this greatly improves compatibility with Hue Essentials, which
-now works quite a bit better:
-
- - Fix brightness scaling: Legacy api uses 0..254, while the new api uses 0..100
- - Fix "group 0" handling: The bridge has a virtual "group 0", which represents all groups on the bridge
- - Add workaround for scenes without `.speed` field (Hue Essentials does this), so we don't get an error
 
 ## Full changelog
 

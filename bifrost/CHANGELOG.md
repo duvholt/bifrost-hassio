@@ -11,6 +11,111 @@ and see if that solves the problem.
 
 We hope you will like Bifrost!
 
+### 2026-05-03: `duvholt/fix/z2m-device-effect`
+
+Fixes parsing of new device effects introduced in zigbee2mqtt 2.10.0. This caused parsing errors for most Philips Hue light updates.
+
+****************************************
+
+### 2026-05-02: `Intecpsp/fix/websocket-stability`
+
+Clean up disconnected websocket connections in Bifrosts websocket API
+
+****************************************
+
+### 2026-05-02: `Intecpsp/fix/ent-stream-reconnect`
+
+Clean up stale entertainment stream on Z2M reconnect
+
+****************************************
+
+### 2025-06-02: `duvholt/timed-effects`
+
+Implement timed effects for Hue lights. This enables the effects "sunrise" and "sunset" using the https api.
+
+****************************************
+
+### 2025-05-27: `duvholt/light-transition`
+
+Implement support for transition (color, brightness)
+
+****************************************
+
+### 2025-05-25: `duvholt/wake-up-sunrise-hue-crate`
+
+Hue crate changes needed for implementing wake-up automation
+
+****************************************
+
+### 2025-05-24: `chrivers/sigterm-handling`
+
+Since Bifrost is running as pid 1 in docker, we need to catch SIGTERM to perform clean shutdowns without waiting for docker timeout to stop the container.
+
+For example, this makes the "stop" button in Home Assistant react quickly, and perform a clean shutdown.
+
+****************************************
+
+### 2025-05-24: `chrivers/unit-test-improvements`
+
+Add unit test coverage for almost all lines of code in the `hue` crate, that is not a data model or constructor.
+
+This work is a bit tedious, but very exciting for the maintainability of Bifrost.
+
+The `hue` crate contains a significant amount of code related to handling events, colors, colorspaces, gamma correction, etc.
+
+All of this code is now tested against our assumptions of what it *should* do.
+This obviously doesn't test if our assumptions are correct, but at least now
+the code can't easily deviate from them.
+
+Adding these unit tests uncovered a number of minor errors that have been fixed:
+- Fix `HueEntSegmentLayout::pack()`, which produced wrong output (currently not used in Bifrost)
+- Make `HueStreamPacket::parse()` not panic on invalid input
+- Make `Clamp::unit_to_u8_clamped()` perform proper rounding.
+- Make `XY::from_rgb_unit()` fall back to `D50_WHITE_POINT`, not `D65_WHITE_POINT`.
+
+Overall, these are minor papercuts that have not noticeably affected the functionality of Bifrost. Nevertheless, it is nice to have good test coverage.
+
+****************************************
+
+### 2025-05-24: `chrivers/service-instancing`
+
+Rework `svc` ("service") crate, to support templated services.
+
+These are analogous to systemd template service, in which a service name can contain `@` to indicate it is a template.
+
+In this way, instead of manually registering `foo-1`, `foo-2`, etc,
+we can register `foo@`, and then start instances `1`, `2`, etc.
+
+This makes service management cleaner and simpler, and provides a way to recognize groups
+of related services.
+
+****************************************
+
+### 2025-05-24: `chrivers/z2m-new-features`
+
+After the many fundamental and infrastructure changes in Bifrost, it's finally
+time for a set of changes that add new features!
+
+This one is particularly exciting, as it contains a number of exciting additions
+that directly improve the end-user experience.
+
+Bifrost is now able to:
+
+ - Update existing scenes (closes #85)
+ - Delete lights
+ - Add new lights to the bridge
+ - Add new lights to rooms
+ - Remove lights from rooms
+ - Make lights pulse when selected
+ - Learn scenes with gradient colors
+
+All these actions now work from the api, including directly from the Hue app!
+
+No more jumping back and forth between the app and z2m to perform common
+maintenance tasks!
+
+****************************************
+
 ### 2025-05-09: `chrivers/apiv1-entertainment-mode`
 
 Implement complete support for entertainment zones ("sync mode") for the v1 api, including the obsolete (but apparently still used) streaming v1 api!
