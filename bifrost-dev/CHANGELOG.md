@@ -12,7 +12,85 @@ in development at the time.
 
 # Changes
 
-### 2025-05-24: `chrivers/web-user-interface`
+### 2026-05-04: `duvholt/feat/dimming-delta`
+
+Implement the dimming_delta API for (grouped) lights. This allows us to dim up/down lights by a relative value.
+
+****************************************
+
+### 2026-05-04: `duvholt/feat/bridge-home-light-updates`
+
+Support bridge home light updates which fixes the global on/off button in the Hue app.
+
+****************************************
+
+### 2026-05-04: `duvholt/fix/lint-errors`
+
+Cleans up some bit rot by fixing clippy warnings.
+
+****************************************
+
+### 2026-05-04: `Intecpsp/fix/ent-reliability-performance`
+
+- Avoids locking resources in the entertainment stream hot loop
+- Graceful entertainment streams handovers
+
+****************************************
+
+### 2026-05-04: `duvholt/fix/mac-adress`
+
+Format zigbee ieee address as mac adress (00:11::22:AA) instead of hex value. 
+This fixes some parsing errors from the Hue app which breaks the device switch list.
+
+****************************************
+
+### 2026-05-04: `Intecpsp/fix/hue-sync-duvholt`
+
+- Corrected the logic that was sorting device names alphabetically before mapping channels. It now uses the stable channel_id provided by the Hue API, ensuring that 'Left' stays 'Left' regardless of bulb names.
+
+- Fixed the logic for standard (non-gradient) bulbs to honor user-assigned positions.
+
+****************************************
+
+### 2026-05-04: `Intecpsp/fix/z2m-bridge-health`
+
+Adds the BridgeHealth parsing to the Z2M API model and explicitly handles it in the bridge event loop to silence unnecessary log spam caused by heartbeat messages.
+
+****************************************
+
+### 2026-05-03: `duvholt/fix/z2m-device-effect`
+
+Fixes parsing of new device effects introduced in zigbee2mqtt 2.10.0. This caused parsing errors for most Philips Hue light updates.
+
+****************************************
+
+### 2026-05-02: `Intecpsp/fix/websocket-stability`
+
+Clean up disconnected websocket connections in Bifrosts websocket API
+
+****************************************
+
+### 2026-05-02: `Intecpsp/fix/ent-stream-reconnect`
+
+Clean up stale entertainment stream on Z2M reconnect
+
+****************************************
+
+### 2025-06-02: `duvholt/timed-effects`
+
+Implement timed effects for Hue lights. This enables the effects "sunrise" and "sunset" using the https api.
+
+****************************************
+
+### 2025-05-27: `duvholt/light-transition`
+
+Implement support for transition (color, brightness)
+
+****************************************
+
+### 2025-05-25: `duvholt/wake-up-sunrise-hue-crate`
+
+Hue crate changes needed for implementing wake-up automation
 
 ****************************************
 
