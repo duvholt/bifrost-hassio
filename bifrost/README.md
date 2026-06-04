@@ -145,6 +145,44 @@ covered the cost of a Hue Sync Box!
 
 # Changelog (11 most recent changes)
 
+### 2026-05-26: `duvholt/feat/hue-flux-lightstrip`
+
+Add support for Hue flux lightstrip and segmented gradient mode
+
+****************************************
+
+### 2026-05-26: `duvholt/light-switch-support`
+
+Add support for light switches with almost all configurations except for:
+- "Dim up and down" (not to be confused with "Dim down" and "Dim up" which are implemented)
+- Smart on/off
+
+For now only these light switches are mapped out:
+- Philips Hue dimmer switches (gen1 and gen2)
+- Friends of Hue switch EnOcean PTM 215Z
+
+Known limitations:
+- The current implementation has to be implemented custom for each light switch. The problem is that there is no universal action interface exposed from z2m so I haven't been able to do any generic button mapping.
+- It's not possible to configure a button for a subset of lights in a room or many rooms. That's because this is using zones which is currently not implemented in Bifrost.
+
+****************************************
+
+### 2026-05-14: `duvholt/chore/bridge-version-bump`
+
+Bumps Hue bridge default version to 1.77.0
+
+****************************************
+
+### 2026-05-14: `duvholt/feat/effects-state`
+
+`philips_raw` was introduced in zigbee2mqtt which reports the raw state for Philips Hue lights. 
+
+Since Bifrost already has support for decoding this format it was relatively straightforward to use this to update our internal light state instead of using attributes from zigbee2mqtt.
+
+The most noticeable change from this is that Philips Hue effects and gradient lights should now properly reflect their status in the app.
+
+****************************************
+
 ### 2026-05-04: `duvholt/feat/dimming-delta`
 
 Implement the dimming_delta API for (grouped) lights. This allows us to dim up/down lights by a relative value.
@@ -188,30 +226,6 @@ This fixes some parsing errors from the Hue app which breaks the device switch l
 ### 2026-05-04: `Intecpsp/fix/z2m-bridge-health`
 
 Adds the BridgeHealth parsing to the Z2M API model and explicitly handles it in the bridge event loop to silence unnecessary log spam caused by heartbeat messages.
-
-****************************************
-
-### 2026-05-03: `duvholt/fix/z2m-device-effect`
-
-Fixes parsing of new device effects introduced in zigbee2mqtt 2.10.0. This caused parsing errors for most Philips Hue light updates.
-
-****************************************
-
-### 2026-05-02: `Intecpsp/fix/websocket-stability`
-
-Clean up disconnected websocket connections in Bifrosts websocket API
-
-****************************************
-
-### 2026-05-02: `Intecpsp/fix/ent-stream-reconnect`
-
-Clean up stale entertainment stream on Z2M reconnect
-
-****************************************
-
-### 2025-06-02: `duvholt/timed-effects`
-
-Implement timed effects for Hue lights. This enables the effects "sunrise" and "sunset" using the https api.
 
 ## Full changelog
 

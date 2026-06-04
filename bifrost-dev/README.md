@@ -149,11 +149,12 @@ In particular, I would like to thank Rohan Kapoor for his very generous donation
 covered the cost of a Hue Sync Box!
 
 
-# Changelog
 
-This version of bifrost-dev is identical to the master branch.
+# Full changelog
 
-When an updated version is released, the changes will be listed here.
+### 2026-06-03: `fix/entertainment-socket`
+
+
 
 # Now on Ko-fi! Donations welcome :-)
 
