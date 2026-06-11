@@ -11,6 +11,26 @@ and see if that solves the problem.
 
 We hope you will like Bifrost!
 
+### 2026-06-07: `duvholt/fix/state-mac-address`
+
+Migrate all ZigbeeConnectivity mac addresses to the correct format to fix an error in the Hue app when loading devices.
+
+****************************************
+
+### 2026-06-07: `duvholt/fix/entertainment-socket`
+
+Handle new socket connections to an existing entertainment stream. 
+This should improve entertainment mode stability for clients like iLightShow.
+
+****************************************
+
+### 2026-06-07: `duvholt/fix/eventstream-syncbox-id`
+
+Properly parse eventstream last-event-id and use it to filter based on order instead of strict id-matching.
+This fixes an issue with the Sync Box 4k which sent weird last-event-id's which could end up sending the wrong events over the eventstream which then caused the box to stop the stream prematurely.
+
+****************************************
+
 ### 2026-05-26: `duvholt/feat/hue-flux-lightstrip`
 
 Add support for Hue flux lightstrip and segmented gradient mode

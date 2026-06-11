@@ -145,6 +145,26 @@ covered the cost of a Hue Sync Box!
 
 # Changelog (11 most recent changes)
 
+### 2026-06-07: `duvholt/fix/state-mac-address`
+
+Migrate all ZigbeeConnectivity mac addresses to the correct format to fix an error in the Hue app when loading devices.
+
+****************************************
+
+### 2026-06-07: `duvholt/fix/entertainment-socket`
+
+Handle new socket connections to an existing entertainment stream. 
+This should improve entertainment mode stability for clients like iLightShow.
+
+****************************************
+
+### 2026-06-07: `duvholt/fix/eventstream-syncbox-id`
+
+Properly parse eventstream last-event-id and use it to filter based on order instead of strict id-matching.
+This fixes an issue with the Sync Box 4k which sent weird last-event-id's which could end up sending the wrong events over the eventstream which then caused the box to stop the stream prematurely.
+
+****************************************
+
 ### 2026-05-26: `duvholt/feat/hue-flux-lightstrip`
 
 Add support for Hue flux lightstrip and segmented gradient mode
@@ -205,27 +225,6 @@ Cleans up some bit rot by fixing clippy warnings.
 
 - Avoids locking resources in the entertainment stream hot loop
 - Graceful entertainment streams handovers
-
-****************************************
-
-### 2026-05-04: `duvholt/fix/mac-adress`
-
-Format zigbee ieee address as mac adress (00:11::22:AA) instead of hex value. 
-This fixes some parsing errors from the Hue app which breaks the device switch list.
-
-****************************************
-
-### 2026-05-04: `Intecpsp/fix/hue-sync-duvholt`
-
-- Corrected the logic that was sorting device names alphabetically before mapping channels. It now uses the stable channel_id provided by the Hue API, ensuring that 'Left' stays 'Left' regardless of bulb names.
-
-- Fixed the logic for standard (non-gradient) bulbs to honor user-assigned positions.
-
-****************************************
-
-### 2026-05-04: `Intecpsp/fix/z2m-bridge-health`
-
-Adds the BridgeHealth parsing to the Z2M API model and explicitly handles it in the bridge event loop to silence unnecessary log spam caused by heartbeat messages.
 
 ## Full changelog
 
