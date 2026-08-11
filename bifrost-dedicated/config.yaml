@@ -1,0 +1,31 @@
+# https://developers.home-assistant.io/docs/add-ons/configuration#add-on-config
+name: Bifrost Dedicated LAN
+version: master-2026-06-07
+slug: bifrost-dedicated
+description: "Bifrost enables you to emulate a Philips Hue Bridge to control lights, groups and scenes from Zigbee2Mqtt."
+url: "https://github.com/duvholt/bifrost"
+arch:
+  - amd64
+  - aarch64
+init: false
+
+## Map config into container (writable)
+map:
+  - config:rw
+
+## The bootstrap process creates a child network namespace and a macvlan
+## interface attached to the HAOS LAN interface.
+privileged:
+  - NET_ADMIN
+  - SYS_ADMIN
+
+## The bootstrap process needs to see the HAOS LAN interface. Bifrost itself is
+## started in a separate child network namespace.
+host_network: true
+
+## slirp4netns uses a TAP device to retain private access to the Supervisor
+## add-on network from Bifrost's child network namespace.
+devices:
+  - /dev/net/tun
+
+apparmor: false
