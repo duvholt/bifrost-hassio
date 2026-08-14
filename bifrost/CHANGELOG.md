@@ -11,6 +11,20 @@ and see if that solves the problem.
 
 We hope you will like Bifrost!
 
+### 2026-08-10: `duvholt/feat/integration-tests`
+
+- Simple zigbee2mqtt in memory emulator for development and integration testing
+- Importing lights and light updates integration tests
+
+****************************************
+
+### 2026-06-14: `duvholt/fix/switch-bridge-app`
+
+Fix clip resource sorting and other minor clip api fixes.
+This fixes a bug in the Hue app where switching from another bridge to Bifrost didn't work without reloading the app.
+
+****************************************
+
 ### 2026-06-07: `duvholt/fix/state-mac-address`
 
 Migrate all ZigbeeConnectivity mac addresses to the correct format to fix an error in the Hue app when loading devices.

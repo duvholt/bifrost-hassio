@@ -145,6 +145,20 @@ covered the cost of a Hue Sync Box!
 
 # Changelog (11 most recent changes)
 
+### 2026-08-10: `duvholt/feat/integration-tests`
+
+- Simple zigbee2mqtt in memory emulator for development and integration testing
+- Importing lights and light updates integration tests
+
+****************************************
+
+### 2026-06-14: `duvholt/fix/switch-bridge-app`
+
+Fix clip resource sorting and other minor clip api fixes.
+This fixes a bug in the Hue app where switching from another bridge to Bifrost didn't work without reloading the app.
+
+****************************************
+
 ### 2026-06-07: `duvholt/fix/state-mac-address`
 
 Migrate all ZigbeeConnectivity mac addresses to the correct format to fix an error in the Hue app when loading devices.
@@ -212,19 +226,6 @@ Implement the dimming_delta API for (grouped) lights. This allows us to dim up/d
 ### 2026-05-04: `duvholt/feat/bridge-home-light-updates`
 
 Support bridge home light updates which fixes the global on/off button in the Hue app.
-
-****************************************
-
-### 2026-05-04: `duvholt/fix/lint-errors`
-
-Cleans up some bit rot by fixing clippy warnings.
-
-****************************************
-
-### 2026-05-04: `Intecpsp/fix/ent-reliability-performance`
-
-- Avoids locking resources in the entertainment stream hot loop
-- Graceful entertainment streams handovers
 
 ## Full changelog
 

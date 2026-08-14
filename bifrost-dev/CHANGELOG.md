@@ -12,7 +12,37 @@ in development at the time.
 
 # Changes
 
-### 2026-06-03: `fix/entertainment-socket`
+### 2026-08-10: `duvholt/feat/integration-tests`
+
+- Simple zigbee2mqtt in memory emulator for development and integration testing
+- Importing lights and light updates integration tests
+
+****************************************
+
+### 2026-06-14: `duvholt/fix/switch-bridge-app`
+
+Fix clip resource sorting and other minor clip api fixes.
+This fixes a bug in the Hue app where switching from another bridge to Bifrost didn't work without reloading the app.
+
+****************************************
+
+### 2026-06-07: `duvholt/fix/state-mac-address`
+
+Migrate all ZigbeeConnectivity mac addresses to the correct format to fix an error in the Hue app when loading devices.
+
+****************************************
+
+### 2026-06-07: `duvholt/fix/entertainment-socket`
+
+Handle new socket connections to an existing entertainment stream. 
+This should improve entertainment mode stability for clients like iLightShow.
+
+****************************************
+
+### 2026-06-07: `duvholt/fix/eventstream-syncbox-id`
+
+Properly parse eventstream last-event-id and use it to filter based on order instead of strict id-matching.
+This fixes an issue with the Sync Box 4k which sent weird last-event-id's which could end up sending the wrong events over the eventstream which then caused the box to stop the stream prematurely.
 
 ****************************************
 
