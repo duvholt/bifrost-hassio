@@ -12,6 +12,65 @@ in development at the time.
 
 # Changes
 
+### 2026-10-28: `duvholt/update-doc`
+
+Update documentation
+
+****************************************
+
+### 2026-10-26: `duvholt/feat/go-to-sleep-behavior`
+
+- Adds full support for the go to sleep automation
+- Support for manually starting and stopping automations
+  - Both wakeup and go to sleep supports it, but it only seems to be used for go to sleep in the app
+- Shared scheduling helper for automations
+- Some edge case fixes for scheduling
+- More integration tests for behavior instances
+- Dynamic fade speed support with a default fade set to 400ms
+
+****************************************
+
+### 2026-10-26: `duvholt/fix/z2m-parse-device-update`
+
+Improve z2m device update parsing for power on and level config
+
+****************************************
+
+### 2026-10-26: `duvholt/fix/hzb-ignore-flag-9`
+
+Ignore the 9th Hue zigbee flag when decoding. It has no known use and I've only been able to get it to report 0.
+
+****************************************
+
+### 2026-09-29: `duvholt/fix/wake-up-delete-pending`
+
+Cancel pending wake up schedules when disabling/deleting the instance
+
+****************************************
+
+### 2026-09-26: `duvholt/test/behavior-instance`
+
+Basic integrations tests for wake-up behavior instance
+
+****************************************
+
+### 2026-09-26: `duvholt/feat/zone-room-rework`
+
+- Add CLIP v2 room and zone creation, updates, and deletion.
+  - Handle group changes like rename and deleting done directly in Zigbee2MQTT
+  - Support empty rooms and zones, creating backend groups when children are added.
+  - Expose zones through the legacy v1 groups API.
+  - Delete associated scenes when removing rooms or zones.
+  - Add integration tests for rooms and zones
+
+****************************************
+
+### 2026-09-26: `duvholt/fix/hue-lights-out-of-sync`
+
+Fix some issues with Hue lights state going out of sync. This could affect both Bifrost light state being out of sync, but also the z2m state itself if attributes were read too early.
+
+****************************************
+
 ### 2026-08-10: `duvholt/feat/integration-tests`
 
 - Simple zigbee2mqtt in memory emulator for development and integration testing
